@@ -27,13 +27,14 @@ router.post(
       min: 5,
     }),
     body("name").trim().not().isEmpty(),
-    body("phone").isNumeric(),
+    // body("phone").isNumeric(),
   ],
   clientController.signup
 );
 
 router.post("/login", clientController.login);
 router.get("/clients", clientController.getUsers);
+router.get("/client", isAuth, clientController.getUser);
 router.put(
   "/client",
   isAuth,
@@ -49,13 +50,12 @@ router.put(
     //   });
     // })
     // .normalizeEmail(),
-    body("name").trim().isLength({
-      min: 5,
-    }),
+    body("name").trim().not().isEmpty(),
+
     body("password").trim().isLength({
       min: 5,
     }),
-    body("phone").isNumeric(),
+    // body("phone").isNumeric(),
   ],
   clientController.updateUser
 );

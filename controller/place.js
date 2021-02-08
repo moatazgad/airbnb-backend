@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 const { validationResult } = require("express-validator/check");
 
 const { estimatedDocumentCount } = require("../models/place");
@@ -27,18 +30,19 @@ exports.createPlace = (req, res, next) => {
   }
   // const images = req.files.path;
   const pets = req.body.pets;
-  const total_bedroom = req.body.total_bedroom;
-  const total_kitchen = req.body.total_kitchen;
-  const total_bathroom = req.body.total_bathroom;
+  const total_rooms = req.body.total_rooms;
+  const total_beds = req.body.total_beds;
+  const total_kitchens = req.body.total_kitchens;
+  const total_bathrooms = req.body.total_bathrooms;
   const price = req.body.price;
   const address = req.body.address;
   const location = req.body.location;
-  const has_TV = req.body.has_TV;
-  const has_aircondition = req.body.has_aircondition;
-  const has_heating = req.body.has_heating;
+  const has_tv = req.body.has_tv;
+  const has_airconditioner = req.body.has_airconditioner;
+  const has_heating_system = req.body.has_heating_system;
   const has_wifi = req.body.has_wifi;
   const max_guests = req.body.max_guests;
-  let creator;
+  let user;
 
   const place = new Place({
     name: name,
@@ -46,26 +50,27 @@ exports.createPlace = (req, res, next) => {
     description: description,
     images: images,
     pets: pets,
-    total_bedroom: total_bedroom,
-    total_kitchen: total_kitchen,
-    total_bathroom: total_bathroom,
+    total_rooms: total_rooms,
+    total_beds: total_beds,
+    total_kitchens: total_kitchens,
+    total_bathrooms: total_bathrooms,
     price: price,
     address: address,
     location: location,
-    has_TV: has_TV,
-    has_aircondition: has_aircondition,
-    has_heating: has_heating,
+    has_tv: has_tv,
+    has_airconditioner: has_airconditioner,
+    has_heating_system: has_heating_system,
     has_wifi: has_wifi,
     max_guests: max_guests,
-    creator: req.userId,
+    user_id: req.user_id,
   });
   place
     .save()
     .then((result) => {
-      return Client.findById(req.userId);
+      return Client.findById(req.user_id);
     })
     .then((client) => {
-      creator = client;
+      user = client;
       client.places.push(place);
       client.is_host = true;
       return client.save();
@@ -74,9 +79,10 @@ exports.createPlace = (req, res, next) => {
       res.status(201).json({
         message: "place created successfully!",
         place: place,
-        creator: {
-          _id: creator._id,
-          name: creator.name,
+        user_id: user._id,
+        user: {
+          _id: user._id,
+          name: user.name,
         },
       });
     })
@@ -95,7 +101,7 @@ exports.createPlace = (req, res, next) => {
 };
 
 exports.getPlaces = (req, res, next) => {
-  Client.findById(req.userId)
+  Client.findById(req.user_id)
     .then((user) => {
       if (!user) {
         const error = new Error("User Not Found");
@@ -150,15 +156,16 @@ exports.updatePlace = (req, res, next) => {
   const type = req.body.type;
   const description = req.body.description;
   const pets = req.body.pets;
-  const total_bedroom = req.body.total_bedroom;
-  const total_kitchen = req.body.total_kitchen;
-  const total_bathroom = req.body.total_bathroom;
+  const total_rooms = req.body.total_rooms;
+  const total_beds = req.body.total_beds;
+  const total_kitchens = req.body.total_kitchens;
+  const total_bathrooms = req.body.total_bathrooms;
   const price = req.body.price;
   const address = req.body.address;
   const location = req.body.location;
-  const has_TV = req.body.has_TV;
-  const has_aircondition = req.body.has_aircondition;
-  const has_heating = req.body.has_heating;
+  const has_tv = req.body.has_tv;
+  const has_airconditioner = req.body.has_airconditioner;
+  const has_heating_system = req.body.has_heating_system;
   const has_wifi = req.body.has_wifi;
   const max_guests = req.body.max_guests;
 
@@ -169,25 +176,29 @@ exports.updatePlace = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if (place.creator.toString() !== req.userId) {
+      if (place.user_id.toString() !== req.user_id) {
         const error = new Error("Not authorized!");
         error.statusCode = 403;
         throw error;
+      }
+      for (index = 0, len = place.images.length; index < len; ++index) {
+        clearImage(place.images[index]);
       }
       place.images = images;
       place.name = name;
       place.type = type;
       place.description = description;
       place.pets = pets;
-      place.total_bedroom = total_bedroom;
-      place.total_kitchen = total_kitchen;
-      place.total_bathroom = total_bathroom;
+      place.total_rooms = total_rooms;
+      place.total_beds = total_beds;
+      place.total_kitchen = total_kitchens;
+      place.total_bathrooms = total_bathrooms;
       place.price = price;
       place.address = address;
       place.location = location;
-      place.has_TV = has_TV;
-      place.has_aircondition = has_aircondition;
-      place.has_heating = has_heating;
+      place.has_TV = has_tv;
+      place.has_airconditioner = has_airconditioner;
+      place.has_heating_system = has_heating_system;
       place.has_wifi = has_wifi;
       place.max_guests = max_guests;
       return place.save();
@@ -224,16 +235,21 @@ exports.deletePlace = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if (place.creator.toString() !== req.userId) {
+      if (place.user_id.toString() !== req.user_id) {
         const error = new Error("Not authorized!");
         error.statusCode = 403;
         throw error;
       }
+      for (index = 0, len = place.images.length; index < len; ++index) {
+        clearImage(place.images[index]);
+      }
+
       // Check logged in user
       return Place.findByIdAndRemove(placeId);
     })
+
     .then((result) => {
-      return Client.findById(req.userId);
+      return Client.findById(req.user_id);
     })
     .then((user) => {
       user.places.pull(placeId);
@@ -258,4 +274,9 @@ exports.deletePlace = (req, res, next) => {
   //   })
   //   .then(place => res.status(204).send(place))
   //   .catch(next);
+};
+
+const clearImage = (filePath) => {
+  filePath = path.join(__dirname, "..", filePath);
+  fs.unlink(filePath, (err) => console.log(err));
 };

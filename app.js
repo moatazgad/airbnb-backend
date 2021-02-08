@@ -35,17 +35,9 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// var cors = require('cors');
-// use it before all route definitions
-// app.use(cors({origin: "*"}));
-app.use(bodyParser.json());
+app.use(bodyParser.json()); //application/json
 
-app.use(
-  multer({
-    storage: fileStorage,
-    fileFilter: fileFilter,
-  }).any("images")
-);
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).any("images"));
 app.use("/images/", express.static(path.join(__dirname, "images")));
 
 app.use((req, res, next) => {
@@ -57,6 +49,10 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
+
+// var cors = require("cors");
+// // use it before all route definitions
+// app.use(cors({ origin: "*" }));
 
 app.use("/api", ClientRoutes);
 app.use("/api", PlaceRoutes);

@@ -20,15 +20,19 @@ const placeShema = new Schema(
       type: Boolean,
       required: true,
     },
-    total_bedroom: {
+    total_rooms: {
       type: Number,
       required: true,
     },
-    total_kitchen: {
+    total_beds: {
       type: Number,
       required: true,
     },
-    total_bathroom: {
+    total_kitchens: {
+      type: Number,
+      required: true,
+    },
+    total_bathrooms: {
       type: Number,
       required: true,
     },
@@ -46,22 +50,22 @@ const placeShema = new Schema(
         required: true,
       },
       zipcode: {
-        type: String,
+        type: Number,
       },
     },
     location: {
       lng: {
-        type: Number,
+        type: String,
       },
       lat: {
-        type: Number,
+        type: String,
       },
     },
-    has_TV: {
+    has_tv: {
       type: Boolean,
       required: true,
     },
-    has_aircondition: {
+    has_airconditioner: {
       type: Boolean,
       required: true,
     },
@@ -70,7 +74,7 @@ const placeShema = new Schema(
       required: true,
     },
 
-    has_heating: {
+    has_heating_system: {
       type: Boolean,
       required: true,
     },
@@ -86,7 +90,7 @@ const placeShema = new Schema(
       type: Number,
       required: true,
     },
-    creator: {
+    user_id: {
       type: Object,
       //   ref: 'User',
       //   required:true

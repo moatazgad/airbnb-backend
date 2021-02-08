@@ -1,40 +1,43 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ReservationShema = new Schema({
-  start_date :{
+const ReservationShema = new Schema(
+  {
+    start_date: {
       type: Date,
-      required:true    // "2002-12-09"
-  },
-  end_date :{
-    type: Date,
-    required:true    // "2002-12-09"
+      required: true, // "2002-12-09"
     },
-  price_per_night :{
+    end_date: {
+      type: Date,
+      required: true, // "2002-12-09"
+    },
+    price_per_night: {
       type: Number,
-      required:true
-  },
-  total_nights :{
+      required: true,
+    },
+    total_nights: {
       type: Number,
-      required:true
-  },
-  // created_at :{
-  //     type: Date
-  // },
-  num_of_guests :{
+      required: true,
+    },
+    // created_at :{
+    //     type: Date
+    // },
+    num_of_guests: {
       type: Number,
-      required:true
-  },
-  creator: {
-    type: Object,
-    // required:true
-  },
-  place_id :{
+      required: true,
+    },
+    user_id: {
       type: Object,
       // required:true
+    },
+    place_id: {
+      type: Object,
+      // required:true
+    },
   },
-},{timestamps: true});
+  { timestamps: true }
+);
 
-const Reservation = mongoose.model('Reservation', ReservationShema );
+const Reservation = mongoose.model("Reservation", ReservationShema);
 
 module.exports = Reservation;

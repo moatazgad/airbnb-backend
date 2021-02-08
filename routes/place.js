@@ -10,7 +10,7 @@ router.post(
   "/place",
   isAuth,
   [
-    body("description").trim().isLength({ min: 15 }),
+    body("description").trim().not().isEmpty(),
     body("name").trim().not().isEmpty(),
   ],
   placeController.createPlace
