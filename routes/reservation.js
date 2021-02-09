@@ -17,7 +17,7 @@ router.post(
   reservationController.createReservation
 );
 router.get("/reservations", isAuth, reservationController.getReservations);
-
+router.get("/reservation/:id", isAuth, reservationController.getReservation);
 router.put(
   "/reservation/:id",
   isAuth,

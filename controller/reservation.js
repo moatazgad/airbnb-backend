@@ -95,6 +95,32 @@ exports.getReservations = (req, res, next) => {
   // .catch(next);
 };
 
+exports.getReservation = (req, res, next) => {
+  const reservationId = req.params.id;
+  Reservation.findById(reservationId)
+    .then((reservation) => {
+      if (!reservation) {
+        const error = new Error("Could not find reservation.");
+        error.statusCode = 404;
+        throw error;
+      }
+      if (reservation.user_id.toString() !== req.user_id) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 403;
+        throw error;
+      }
+      res
+        .status(200)
+        .json({ message: "reservation fetched.", reservation: reservation });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 exports.updateReservation = (req, res, next) => {
   const reservationId = req.params.id;
 

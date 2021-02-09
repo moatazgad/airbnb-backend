@@ -63,15 +63,14 @@ exports.signup = (req, res, next) => {
   //   .catch(next)
 };
 
-exports.login = async (req, res, next) => {
+exports.login = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   let loadedUser;
-  await Client.findOne({
+  Client.findOne({
     email: email,
   })
     .then((client) => {
-      console.log("client", req.body);
       if (!client) {
         const error = new Error("A user with this email could not be found.");
         error.statusCode = 401;
@@ -96,7 +95,7 @@ exports.login = async (req, res, next) => {
           expiresIn: "1h",
         }
       );
-      console.log("token", token); ////////////
+      console.log("token", token);
       res.status(200).json({
         token: token,
         user_id: loadedUser._id.toString(),

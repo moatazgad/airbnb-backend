@@ -12,6 +12,9 @@ const WishlistRoutes = require("./routes/wishlist");
 const ReservationRoutes = require("./routes/reservation");
 const ReviewsRoutes = require("./routes/review");
 
+const MONGODB_URI =
+  "mongodb+srv://Moataz:283TyrJkj3MmPSY7@cluster0.igpk5.mongodb.net/client?retryWrites=true&w=majority";
+
 const app = express();
 
 const fileStorage = multer.diskStorage({
@@ -72,9 +75,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://Moataz:283TyrJkj3MmPSY7@cluster0.igpk5.mongodb.net/client?retryWrites=true&w=majority"
-  )
+  .connect(MONGODB_URI)
   .then((result) => {
     app.listen(8080);
   })

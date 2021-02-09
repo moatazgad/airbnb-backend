@@ -65,6 +65,33 @@ exports.getWishlists = (req, res, next) => {
   // .then(wishlist => res.send(wishlist))
   // .catch("nooooo");
 };
+
+exports.getWishlist = (req, res, next) => {
+  const wishlistId = req.params.id;
+  Wishlist.findById(wishlistId)
+    .then((wishlist) => {
+      if (!wishlist) {
+        const error = new Error("Could not find wishlist.");
+        error.statusCode = 404;
+        throw error;
+      }
+      if (wishlist.user_id.toString() !== req.user_id) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 403;
+        throw error;
+      }
+      res
+        .status(200)
+        .json({ message: "wishlist fetched.", wishlist: wishlist });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 exports.updateWishlist = (req, res, next) => {
   const driverId = req.params.id;
   const driverProps = req.body;

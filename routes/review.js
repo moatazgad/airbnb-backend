@@ -13,8 +13,8 @@ router.post(
   reviewController.postReview
 );
 router.get("/reviews", isAuth, reviewController.getReviews);
-router.get("/placeReviews/:id", isAuth, reviewController.getPlaceReviews);
-
+router.get("/placeReviews/:id", reviewController.getPlaceReviews);
+router.get("/review/:id", reviewController.getReview);
 router.put(
   "/review/:id",
   isAuth,

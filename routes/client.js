@@ -27,7 +27,6 @@ router.post(
       min: 5,
     }),
     body("name").trim().not().isEmpty(),
-    // body("phone").isNumeric(),
   ],
   clientController.signup
 );

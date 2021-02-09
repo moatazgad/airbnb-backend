@@ -95,6 +95,30 @@ exports.getReviews = (req, res, next) => {
   // .catch("nooooo");
 };
 
+exports.getReview = (req, res, next) => {
+  const reviewId = req.params.id;
+  Review.findById(reviewId)
+    .then((review) => {
+      if (!review) {
+        const error = new Error("Could not find review.");
+        error.statusCode = 404;
+        throw error;
+      }
+      // if (review.user_id.toString() !== req.user_id) {
+      //   const error = new Error("Not authorized!");
+      //   error.statusCode = 403;
+      //   throw error;
+      // }
+      res.status(200).json({ message: "review fetched.", review: review });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 exports.getPlaceReviews = (req, res, next) => {
   Place.findById(req.params.id)
     .then((place) => {

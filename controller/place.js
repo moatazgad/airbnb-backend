@@ -138,6 +138,29 @@ exports.getAllPlaces = (req, res, next) => {
       next(err);
     });
 };
+exports.getPlace = (req, res, next) => {
+  const placeId = req.params.id;
+  Place.findById(placeId)
+    .then((place) => {
+      if (!place) {
+        const error = new Error("Could not find place.");
+        error.statusCode = 404;
+        throw error;
+      }
+      // if (place.user_id.toString() !== req.user_id) {
+      //   const error = new Error("Not authorized!");
+      //   error.statusCode = 403;
+      //   throw error;
+      // }
+      res.status(200).json({ message: "place fetched.", place: place });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
 
 exports.updatePlace = (req, res, next) => {
   const placeId = req.params.id;

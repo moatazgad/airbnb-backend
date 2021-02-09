@@ -18,6 +18,7 @@ router.post(
 
 router.get("/places", isAuth, placeController.getPlaces);
 router.get("/allPlaces", placeController.getAllPlaces);
+router.get("/place/:id", placeController.getPlace);
 router.put(
   "/place/:id",
   isAuth,
