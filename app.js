@@ -17,7 +17,7 @@ const WishlistRoutes = require("./routes/wishlist");
 const ReservationRoutes = require("./routes/reservation");
 const ReviewsRoutes = require("./routes/review");
 
-const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.igpk5.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`;
+const MONGODB_URI = ``;
 
 const app = express();
 
