@@ -9,6 +9,9 @@
 .server.cert
 .server.key
 
+server.cert
+server.key
+
 # testing
 /coverage
 
