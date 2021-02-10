@@ -6,8 +6,8 @@
 .pnp.js
 
 
-.server.cert
-.server.key
+# .server.cert
+# .server.key
 
 server.cert
 server.key
