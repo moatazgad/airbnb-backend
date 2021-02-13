@@ -172,9 +172,22 @@ exports.updatePlace = (req, res, next) => {
     throw error;
   }
 
+  let imgs=req.body.images;
+  console.log(typeof(req.body.images));
+  if(typeof(imgs)=== "object") {
+    for (index = 0, len = req.body.images.length; index < len; ++index){
+      images.push(req.body.images[index]);
+      console.log(req.body.images[index])
+    }
+  } else {
   for (index = 0, len = req.files.length; index < len; ++index) {
     images.push(req.files[index].path.replace("\\", "/"));
-  }
+  }}
+
+  // for (index = 0, len = req.files.length; index < len; ++index) {
+  //   images.push(req.files[index].path.replace("\\", "/"));
+  // }
+  
   const name = req.body.name;
   const type = req.body.type;
   const description = req.body.description;
@@ -263,9 +276,10 @@ exports.deletePlace = (req, res, next) => {
         error.statusCode = 403;
         throw error;
       }
-      for (index = 0, len = place.images.length; index < len; ++index) {
-        clearImage(place.images[index]);
-      }
+      
+      // for (index = 0, len = place.images.length; index < len; ++index) {
+      //   clearImage(place.images[index]);
+      // }
 
       // Check logged in user
       return Place.findByIdAndRemove(placeId);
