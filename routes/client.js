@@ -51,9 +51,9 @@ router.put(
     // .normalizeEmail(),
     body("name").trim().not().isEmpty(),
 
-    body("password").trim().isLength({
-      min: 5,
-    }),
+    // body("password").trim().isLength({
+    //   min: 5,
+    // }),
     // body("phone").isNumeric(),
   ],
   clientController.updateUser

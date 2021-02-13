@@ -19,18 +19,19 @@ exports.signup = (req, res, next) => {
     throw error;
   }
   // NO PROFILE IMAGE
-  if (!req.files) {
-    const error = new Error("No image provided.");
-    error.statusCode = 422;
-    throw error;
-  }
+  // if (!req.files) {
+  //   const error = new Error("No image provided.");
+  //   error.statusCode = 422;
+  //   throw error;
+  // }
+
   const email = req.body.email;
   const name = req.body.name;
   const password = req.body.password;
   const phone = req.body.phone;
   const is_host = req.body.is_host;
   // const profile_image = req.body.profile_image;
-  const profile_image = req.files[0].path.replace("\\", "/");
+  // const profile_image = req.files[0].path.replace("\\", "/");
   bcrypt
     .hash(password, 12)
     .then((hashedPw) => {
@@ -39,7 +40,7 @@ exports.signup = (req, res, next) => {
         password: hashedPw,
         name: name,
         phone: phone,
-        profile_image: profile_image,
+        // profile_image: profile_image,
         is_host: is_host,
       });
       return client.save();
@@ -92,7 +93,7 @@ exports.login = (req, res, next) => {
         },
         "somesupersecretsecret",
         {
-          expiresIn: "1h",
+          expiresIn: "20h",
         }
       );
       console.log("token", token);
@@ -186,16 +187,16 @@ exports.updateUser = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if (profile_image !== user.profile_image) {
-        clearImage(user.profile_image);
-      }
-      bcrypt.hash(password, 12).then((hashedPw) => {
+      // if (profile_image !== user.profile_image) {
+      //   clearImage(user.profile_image);
+      // }
+      // bcrypt.hash(password, 12).then((hashedPw) => {
         user.name = name;
         user.phone = phone;
         user.profile_image = profile_image;
-        user.password = hashedPw;
+        // user.password = hashedPw;
         return user.save();
-      });
+      // });
     })
 
     .then((result) => {
