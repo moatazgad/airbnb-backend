@@ -158,8 +158,16 @@ exports.updateUser = (req, res, next) => {
   }
   const name = req.body.name;
   const phone = req.body.phone;
-  const password = req.body.password;
-  const profile_image = req.body.profile_image;
+  // const password = req.body.password;
+  let profile_image = req.body.profile_image;
+
+  if (typeof(profile_image) === "string" ) {
+    profile_image = req.body.profile_image;
+    
+  }
+  else {
+    profile_image = req.files[0].path.replace("\\", "/");
+  }
 
   // NO PROFILE IMAGE
   // let profile_image = req.body.profile_image;
