@@ -239,3 +239,18 @@ exports.deleteReview = (req, res, next) => {
   //   .then(reviews => res.status(204).send(reviews))
   //   .catch(next);
 };
+
+exports.getAllReviews = (req, res, next) => {
+  Review.find()
+    .then((reviews) => {
+      res
+        .status(200)
+        .json({ message: "Fetched reviews successfully!!.", reviews: reviews });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};

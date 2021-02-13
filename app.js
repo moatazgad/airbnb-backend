@@ -13,7 +13,8 @@ const ReservationRoutes = require("./routes/reservation");
 const ReviewsRoutes = require("./routes/review");
 
 const MONGODB_URI =
-  "mongodb+srv://Moataz:283TyrJkj3MmPSY7@cluster0.igpk5.mongodb.net/client?retryWrites=true&w=majority";
+  "mongodb+srv://Sondos:4McGgvN9zPvTwgUT@cluster0.igpk5.mongodb.net/client?retryWrites=true&w=majority";
+  // "mongodb+srv://Moataz:283TyrJkj3MmPSY7@cluster0.igpk5.mongodb.net/client?retryWrites=true&w=majority";
 
 const app = express();
 
