@@ -129,7 +129,7 @@ exports.getAllPlaces = (req, res, next) => {
     .then((places) => {
       res
         .status(200)
-        .json({ message: "Fetched places successfully.", places: places });
+        .json({ message: "Fetched places successfully!!.", places: places });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -138,6 +138,7 @@ exports.getAllPlaces = (req, res, next) => {
       next(err);
     });
 };
+
 exports.getPlace = (req, res, next) => {
   const placeId = req.params.id;
   Place.findById(placeId)

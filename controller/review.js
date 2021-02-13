@@ -42,6 +42,7 @@ exports.postReview = (req, res, next) => {
       //Trial--------------------------------------------
       //Trial--------------------------------------------
       place.reviews.push(review);
+      place.ratings.push(review.rating);
       place.save();
       //Trial--------------------------------------------
       //Trial--------------------------------------------
@@ -128,6 +129,39 @@ exports.getPlaceReviews = (req, res, next) => {
         throw error;
       }
       res.status(200).json({ reviews: place.reviews });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getAllReviews = (req, res, next) => {
+  Review.find()
+    .then((reviews) => {
+      res
+        .status(200)
+        .json({ message: "Fetched reviews successfully!!.", reviews: reviews });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getPlaceRatings = (req, res, next) => {
+  Place.findById(req.params.id)
+    .then((place) => {
+      if (!place) {
+        const error = new Error("Place Not Found");
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ rating: place.ratings });
     })
     .catch((err) => {
       if (!err.statusCode) {

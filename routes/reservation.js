@@ -10,19 +10,23 @@ router.post(
   "/reservation/:id",
   isAuth,
   [
-    body("price_per_night").isNumeric(),
+    // body("price_per_night").isNumeric(),
     body("total_nights").isNumeric(),
     body("num_of_guests").isNumeric(),
   ],
   reservationController.createReservation
 );
 router.get("/reservations", isAuth, reservationController.getReservations);
+router.get(
+  "/placeReservations/:id",
+  reservationController.getPlaceReservations
+);
 router.get("/reservation/:id", isAuth, reservationController.getReservation);
 router.put(
   "/reservation/:id",
   isAuth,
   [
-    body("price_per_night").isNumeric(),
+    // body("price_per_night").isNumeric(),
     body("total_nights").isNumeric(),
     body("num_of_guests").isNumeric(),
   ],

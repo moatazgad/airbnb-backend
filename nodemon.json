@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGO_USER": "Moataz",
+    "MONGO_PASSWORD": "283TyrJkj3MmPSY7",
+    "MONGO_DEFAULT_DATABASE": "client"
+  }
+}
