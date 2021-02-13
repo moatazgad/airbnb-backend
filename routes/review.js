@@ -14,7 +14,9 @@ router.post(
 );
 router.get("/reviews", isAuth, reviewController.getReviews);
 router.get("/placeReviews/:id", reviewController.getPlaceReviews);
+router.get("/placeRating/:id", reviewController.getPlaceRatings);
 router.get("/review/:id", reviewController.getReview);
+router.get("/allReviews", reviewController.getAllReviews);
 router.put(
   "/review/:id",
   isAuth,

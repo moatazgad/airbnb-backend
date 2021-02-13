@@ -78,6 +78,9 @@ const placeShema = new Schema(
       type: Boolean,
       required: true,
     },
+    ratings: {
+      type: Array,
+    },
     images: [
       {
         type: String,
@@ -99,6 +102,12 @@ const placeShema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Review",
+      },
+    ],
+    reservations: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Reservation",
       },
     ],
   },

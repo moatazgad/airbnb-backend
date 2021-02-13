@@ -16,7 +16,7 @@ exports.createReservation = (req, res, next) => {
   }
   const start_date = req.body.start_date;
   const end_date = req.body.end_date;
-  const price_per_night = req.body.price_per_night;
+  // const price_per_night = req.body.price_per_night;
   const total_nights = req.body.total_nights;
   const num_of_guests = req.body.num_of_guests;
   let user;
@@ -25,7 +25,7 @@ exports.createReservation = (req, res, next) => {
   const reservation = new Reservation({
     start_date: start_date,
     end_date: end_date,
-    price_per_night: price_per_night,
+    // price_per_night: price_per_night,
     total_nights: total_nights,
     num_of_guests: num_of_guests,
     user_id: req.user_id,
@@ -45,6 +45,10 @@ exports.createReservation = (req, res, next) => {
       return Place.findById(place_id);
     })
     .then((place) => {
+      //place reservations
+      place.reservations.push(reservation);
+      place.save();
+      //place reservations
       res.status(201).json({
         message: "reservation created successfully!",
         reservation: reservation,
@@ -95,6 +99,24 @@ exports.getReservations = (req, res, next) => {
   // .catch(next);
 };
 
+exports.getPlaceReservations = (req, res, next) => {
+  Place.findById(req.params.id)
+    .then((place) => {
+      if (!place) {
+        const error = new Error("Place Not Found");
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ reservations: place.reservations });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 exports.getReservation = (req, res, next) => {
   const reservationId = req.params.id;
   Reservation.findById(reservationId)
@@ -132,7 +154,7 @@ exports.updateReservation = (req, res, next) => {
   }
   const start_date = req.body.start_date;
   const end_date = req.body.end_date;
-  const price_per_night = req.body.price_per_night;
+  // const price_per_night = req.body.price_per_night;
   const total_nights = req.body.total_nights;
   const num_of_guests = req.body.num_of_guests;
 
@@ -150,7 +172,7 @@ exports.updateReservation = (req, res, next) => {
       }
       reservation.start_date = start_date;
       reservation.end_date = end_date;
-      reservation.price_per_night = price_per_night;
+      // reservation.price_per_night = price_per_night;
       reservation.total_nights = total_nights;
       reservation.num_of_guests = num_of_guests;
       return reservation.save();
@@ -193,6 +215,7 @@ exports.deleteReservation = (req, res, next) => {
         throw error;
       }
       // Check logged in user
+      placeId = reservation.place_id;
       return Reservation.findByIdAndRemove(reservationId);
     })
     .then((result) => {
@@ -202,6 +225,14 @@ exports.deleteReservation = (req, res, next) => {
       user.reservations.pull(reservationId);
       return user.save();
     })
+    .then((result) => {
+      return Place.findById(placeId);
+    })
+    .then((place) => {
+      place.reservations.pull(reservationId);
+      return place.save();
+    })
+
     .then((result) => {
       res.status(200).json({ message: "Deleted Reservation." });
     })

@@ -1,5 +1,5 @@
-// const fs = require("fs");
-// const path = require("path");
+const fs = require("fs");
+const path = require("path");
 
 const { validationResult } = require("express-validator/check");
 const bcrypt = require("bcryptjs");
@@ -19,18 +19,18 @@ exports.signup = (req, res, next) => {
     throw error;
   }
   // NO PROFILE IMAGE
-  // if (!req.files) {
-  //   const error = new Error("No image provided.");
-  //   error.statusCode = 422;
-  //   throw error;
-  // }
+  if (!req.files) {
+    const error = new Error("No image provided.");
+    error.statusCode = 422;
+    throw error;
+  }
   const email = req.body.email;
   const name = req.body.name;
   const password = req.body.password;
   const phone = req.body.phone;
   const is_host = req.body.is_host;
-  const profile_image = req.body.profile_image;
-  // const profile_image = req.files[0].path.replace("\\", "/");
+  // const profile_image = req.body.profile_image;
+  const profile_image = req.files[0].path.replace("\\", "/");
   bcrypt
     .hash(password, 12)
     .then((hashedPw) => {
@@ -159,18 +159,18 @@ exports.updateUser = (req, res, next) => {
   const name = req.body.name;
   const phone = req.body.phone;
   const password = req.body.password;
-  const profile_image = req.body.profile_image;
+  // const profile_image = req.body.profile_image;
 
   // NO PROFILE IMAGE
-  // let profile_image = req.body.profile_image;
-  // if (req.files) {
-  //   profile_image = req.files[0].path.replace("\\", "/");
-  // }
-  // if (!profile_image) {
-  //   const error = new Error("No file picked.");
-  //   error.statusCode = 422;
-  //   throw error;
-  // }
+  let profile_image = req.body.profile_image;
+  if (req.files) {
+    profile_image = req.files[0].path.replace("\\", "/");
+  }
+  if (!profile_image) {
+    const error = new Error("No file picked.");
+    error.statusCode = 422;
+    throw error;
+  }
   Client.findById(req.user_id)
     .then((user) => {
       if (!user) {
@@ -178,9 +178,9 @@ exports.updateUser = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      // if (profile_image !== user.profile_image) {
-      //   clearImage(user.profile_image);
-      // }
+      if (profile_image !== user.profile_image) {
+        clearImage(user.profile_image);
+      }
       bcrypt.hash(password, 12).then((hashedPw) => {
         user.name = name;
         user.phone = phone;
@@ -212,6 +212,49 @@ exports.updateUser = (req, res, next) => {
   // .catch(next);
 };
 
+exports.updatePassword = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation failed, entered data is incorrect.");
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const oldPassword = req.body.oldPassword;
+  const newPassword = req.body.newPassword;
+
+  Client.findById(req.user_id)
+    .then((user) => {
+      if (!user) {
+        const error = new Error("User Not Found");
+        error.statusCode = 404;
+        throw error;
+      }
+      return bcrypt.compare(oldPassword, user.password).then((isEqual) => {
+        if (!isEqual) {
+          const error = new Error("Wrong password!");
+          error.statusCode = 401;
+          throw error;
+        }
+        bcrypt.hash(newPassword, 12).then((hashedPw) => {
+          user.password = hashedPw;
+          return user.save();
+        });
+      });
+    })
+    .then((result) => {
+      res.status(200).json({
+        message: "Password updated.",
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 exports.deleteUser = (req, res, next) => {
   const driverId = req.params.id;
   Client.findByIdAndRemove({
@@ -221,7 +264,7 @@ exports.deleteUser = (req, res, next) => {
     .catch(next);
 };
 
-// const clearImage = (filePath) => {
-//   filePath = path.join(__dirname, "..", filePath);
-//   fs.unlink(filePath, (err) => console.log(err));
-// };
+const clearImage = (filePath) => {
+  filePath = path.join(__dirname, "..", filePath);
+  fs.unlink(filePath, (err) => console.log(err));
+};

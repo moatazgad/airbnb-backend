@@ -11,10 +11,10 @@ const ReservationShema = new Schema(
       type: Date,
       required: true, // "2002-12-09"
     },
-    price_per_night: {
-      type: Number,
-      required: true,
-    },
+    // price_per_night: {
+    //   type: Number,
+    //   required: true,
+    // },
     total_nights: {
       type: Number,
       required: true,

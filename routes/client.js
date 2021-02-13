@@ -58,6 +58,7 @@ router.put(
   ],
   clientController.updateUser
 );
+router.put("/clientPassword", isAuth, clientController.updatePassword);
 router.delete("/client/:id", clientController.deleteUser);
 
 module.exports = router;
