@@ -15,7 +15,7 @@ exports.createPlace = (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
-  if (!req.files) {
+  if (!req.files[0]) {
     const error = new Error("No image provided.");
     error.statusCode = 422;
     throw error;
@@ -173,22 +173,35 @@ exports.updatePlace = (req, res, next) => {
     throw error;
   }
 
-  let imgs=req.body.images;
-  console.log(typeof(req.body.images));
-  if(typeof(imgs)=== "object") {
-    for (index = 0, len = req.body.images.length; index < len; ++index){
-      images.push(req.body.images[index]);
-      console.log(req.body.images[index])
+  let imgs = req.body.images;
+  console.log(typeof req.body.images);
+  // if (typeof imgs === "object") {
+  //   // req.files && typeof profile_image !== "string"
+  //   for (index = 0, len = req.body.images.length; index < len; ++index) {
+  //     images.push(req.body.images[index]);
+  //     console.log(req.body.images[index]);
+  //   }
+  // } else {
+  //   for (index = 0, len = req.files.length; index < len; ++index) {
+  //     images.push(req.files[index].path.replace("\\", "/"));
+  //   }
+  // }
+  if (req.files[0]) {
+    // req.files && typeof profile_image !== "string"
+    for (index = 0, len = req.files.length; index < len; ++index) {
+      images.push(req.files[index].path.replace("\\", "/"));
     }
   } else {
-  for (index = 0, len = req.files.length; index < len; ++index) {
-    images.push(req.files[index].path.replace("\\", "/"));
-  }}
+    for (index = 0, len = req.body.images.length; index < len; ++index) {
+      images.push(req.body.images[index]);
+      console.log(req.body.images[index]);
+    }
+  }
 
   // for (index = 0, len = req.files.length; index < len; ++index) {
   //   images.push(req.files[index].path.replace("\\", "/"));
   // }
-  
+
   const name = req.body.name;
   const type = req.body.type;
   const description = req.body.description;
@@ -218,9 +231,10 @@ exports.updatePlace = (req, res, next) => {
         error.statusCode = 403;
         throw error;
       }
-      for (index = 0, len = place.images.length; index < len; ++index) {
-        clearImage(place.images[index]);
-      }
+      if (req.files[0])
+        for (index = 0, len = place.images.length; index < len; ++index) {
+          clearImage(place.images[index]);
+        }
       place.images = images;
       place.name = name;
       place.type = type;
@@ -277,7 +291,7 @@ exports.deletePlace = (req, res, next) => {
         error.statusCode = 403;
         throw error;
       }
-      
+
       // for (index = 0, len = place.images.length; index < len; ++index) {
       //   clearImage(place.images[index]);
       // }

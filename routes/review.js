@@ -12,7 +12,6 @@ router.post(
   [body("rating").isInt({ min: 0, max: 5 })],
   reviewController.postReview
 );
-router.get("/allReviews", reviewController.getAllReviews);
 router.get("/reviews", isAuth, reviewController.getReviews);
 router.get("/placeReviews/:id", reviewController.getPlaceReviews);
 router.get("/placeRating/:id", reviewController.getPlaceRatings);

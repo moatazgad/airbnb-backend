@@ -162,11 +162,13 @@ exports.updateUser = (req, res, next) => {
   // const password = req.body.password;
   let profile_image = req.body.profile_image;
 
-  if (typeof(profile_image) === "string" ) {
-    profile_image = req.body.profile_image;
-    
-  }
-  else {
+  // if (typeof profile_image === "string") {
+  //   profile_image = req.body.profile_image;
+  // } else {
+  //   profile_image = req.files[0].path.replace("\\", "/");
+  // }
+  console.log(typeof profile_image);
+  if (req.files && typeof profile_image !== "string") {
     profile_image = req.files[0].path.replace("\\", "/");
   }
 
@@ -187,15 +189,19 @@ exports.updateUser = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      // if (profile_image !== user.profile_image) {
-      //   clearImage(user.profile_image);
-      // }
+      if (
+        user.profile_image &&
+        profile_image !== user.profile_image &&
+        req.files[0]
+      ) {
+        clearImage(user.profile_image);
+      }
       // bcrypt.hash(password, 12).then((hashedPw) => {
-        user.name = name;
-        user.phone = phone;
-        user.profile_image = profile_image;
-        // user.password = hashedPw;
-        return user.save();
+      user.name = name;
+      user.phone = phone;
+      user.profile_image = profile_image;
+      // user.password = hashedPw;
+      return user.save();
       // });
     })
 
