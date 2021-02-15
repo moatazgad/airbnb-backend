@@ -164,6 +164,7 @@ exports.getPlace = (req, res, next) => {
 };
 
 exports.updatePlace = (req, res, next) => {
+  // console.log("*********", req);
   const placeId = req.params.id;
   let images = [];
   const errors = validationResult(req);
@@ -174,7 +175,7 @@ exports.updatePlace = (req, res, next) => {
   }
 
   let imgs = req.body.images;
-  console.log(typeof req.body.images);
+  // console.log(typeof req.body.images);
   // if (typeof imgs === "object") {
   //   // req.files && typeof profile_image !== "string"
   //   for (index = 0, len = req.body.images.length; index < len; ++index) {
@@ -194,7 +195,7 @@ exports.updatePlace = (req, res, next) => {
   } else {
     for (index = 0, len = req.body.images.length; index < len; ++index) {
       images.push(req.body.images[index]);
-      console.log(req.body.images[index]);
+      // console.log(req.body.images[index]);
     }
   }
 
@@ -209,6 +210,7 @@ exports.updatePlace = (req, res, next) => {
   const total_rooms = req.body.total_rooms;
   const total_beds = req.body.total_beds;
   const total_kitchens = req.body.total_kitchens;
+  console.log("1-----------------: ", total_kitchens);
   const total_bathrooms = req.body.total_bathrooms;
   const price = req.body.price;
   const address = req.body.address;
@@ -242,7 +244,8 @@ exports.updatePlace = (req, res, next) => {
       place.pets = pets;
       place.total_rooms = total_rooms;
       place.total_beds = total_beds;
-      place.total_kitchen = total_kitchens;
+      place.total_kitchens = total_kitchens;
+      console.log("2-----------: ", place.total_kitchens)
       place.total_bathrooms = total_bathrooms;
       place.price = price;
       place.address = address;
