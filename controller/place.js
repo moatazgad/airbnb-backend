@@ -245,7 +245,7 @@ exports.updatePlace = (req, res, next) => {
       place.total_rooms = total_rooms;
       place.total_beds = total_beds;
       place.total_kitchens = total_kitchens;
-      console.log("2-----------: ", place.total_kitchens)
+      console.log("2-----------: ", place.total_kitchens);
       place.total_bathrooms = total_bathrooms;
       place.price = price;
       place.address = address;

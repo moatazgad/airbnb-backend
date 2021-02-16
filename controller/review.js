@@ -19,6 +19,9 @@ exports.postReview = (req, res, next) => {
   let user;
   const place_id = req.params.id;
 
+  let sum = 0;
+  let average = 0;
+
   const review = new Review({
     rating: rating,
     comment: comment,
@@ -43,6 +46,15 @@ exports.postReview = (req, res, next) => {
       //Trial--------------------------------------------
       place.reviews.push(review);
       place.ratings.push(review.rating);
+
+      for (index = 0, len = place.ratings.length; index < len; ++index) {
+        sum += place.ratings[index];
+      }
+      if (place.ratings.length !== 0) {
+        average = sum / place.ratings.length;
+      }
+      place.ratingsValue = average;
+
       place.save();
       //Trial--------------------------------------------
       //Trial--------------------------------------------
@@ -154,6 +166,8 @@ exports.getAllReviews = (req, res, next) => {
 };
 
 exports.getPlaceRatings = (req, res, next) => {
+  let sum = 0;
+  let average = 0;
   Place.findById(req.params.id)
     .then((place) => {
       if (!place) {
@@ -161,7 +175,15 @@ exports.getPlaceRatings = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      res.status(200).json({ rating: place.ratings });
+      for (index = 0, len = place.ratings.length; index < len; ++index) {
+        sum += place.ratings[index];
+      }
+      if (place.ratings.length !== 0) {
+        average = sum / place.ratings.length;
+      }
+      // console.log(place.ratings.length);
+
+      res.status(200).json({ rating: average });
     })
     .catch((err) => {
       if (!err.statusCode) {

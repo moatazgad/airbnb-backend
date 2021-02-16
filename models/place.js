@@ -81,6 +81,9 @@ const placeShema = new Schema(
     ratings: {
       type: Array,
     },
+    ratingsValue: {
+      type: Number,
+    },
     images: [
       {
         type: String,
