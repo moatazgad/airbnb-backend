@@ -22,6 +22,7 @@ router.get(
   reservationController.getPlaceReservations
 );
 router.get("/reservation/:id", isAuth, reservationController.getReservation);
+router.get("/reservationNotAuth/:id", reservationController.getReservation_Not_Auth);
 router.put(
   "/reservation/:id",
   isAuth,

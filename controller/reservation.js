@@ -118,6 +118,7 @@ exports.getPlaceReservations = (req, res, next) => {
 };
 
 exports.getReservation = (req, res, next) => {
+  console.log("llllllllllllllllllllllllllllllllll");
   const reservationId = req.params.id;
   Reservation.findById(reservationId)
     .then((reservation) => {
@@ -131,6 +132,28 @@ exports.getReservation = (req, res, next) => {
         error.statusCode = 403;
         throw error;
       }
+      res
+        .status(200)
+        .json({ message: "reservation fetched.", reservation: reservation });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+exports.getReservation_Not_Auth = (req, res, next) => {
+  // console.log("hereeeeeeeeeeeeeddddddd:    " , req.params.id);
+  const reservationId = req.params.id;
+  Reservation.findById(reservationId)
+    .then((reservation) => {
+      if (!reservation) {
+        const error = new Error("Could not find reservation.");
+        error.statusCode = 404;
+        throw error;
+      }
+     
       res
         .status(200)
         .json({ message: "reservation fetched.", reservation: reservation });
