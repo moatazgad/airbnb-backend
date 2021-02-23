@@ -90,12 +90,12 @@ app.use((error, req, res, next) => {
     data: data,
   });
 });
-console.log(
-  process.env.MONGO_USER,
-  process.env.MONGO_PASSWORD,
-  process.env.MONGO_DEFAULT_DATABASE,
-  process.env.NODE_ENV
-);
+// console.log(
+//   process.env.MONGO_USER,
+//   process.env.MONGO_PASSWORD,
+//   process.env.MONGO_DEFAULT_DATABASE,
+//   process.env.NODE_ENV
+// );
 
 mongoose
   .connect(MONGODB_URI)

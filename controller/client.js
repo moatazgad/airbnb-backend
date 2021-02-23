@@ -96,7 +96,6 @@ exports.login = (req, res, next) => {
           expiresIn: "20h",
         }
       );
-      console.log("token", token);
       res.status(200).json({
         token: token,
         user_id: loadedUser._id.toString(),
@@ -167,8 +166,7 @@ exports.updateUser = (req, res, next) => {
   // } else {
   //   profile_image = req.files[0].path.replace("\\", "/");
   // }
-  console.log(typeof profile_image);
-  if (req.files && typeof profile_image !== "string") {
+  if (req.files[0] && typeof profile_image !== "string") {
     profile_image = req.files[0].path.replace("\\", "/");
   }
 
@@ -189,13 +187,13 @@ exports.updateUser = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if (
-        user.profile_image &&
-        profile_image !== user.profile_image &&
-        req.files[0]
-      ) {
-        clearImage(user.profile_image);
-      }
+      // if (
+      //   user.profile_image &&
+      //   profile_image !== user.profile_image &&
+      //   req.files[0]
+      // ) {
+      //   clearImage(user.profile_image);
+      // }
       // bcrypt.hash(password, 12).then((hashedPw) => {
       user.name = name;
       user.phone = phone;

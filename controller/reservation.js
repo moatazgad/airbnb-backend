@@ -118,7 +118,6 @@ exports.getPlaceReservations = (req, res, next) => {
 };
 
 exports.getReservation = (req, res, next) => {
-  console.log("llllllllllllllllllllllllllllllllll");
   const reservationId = req.params.id;
   Reservation.findById(reservationId)
     .then((reservation) => {
@@ -144,7 +143,6 @@ exports.getReservation = (req, res, next) => {
     });
 };
 exports.getReservation_Not_Auth = (req, res, next) => {
-  // console.log("hereeeeeeeeeeeeeddddddd:    " , req.params.id);
   const reservationId = req.params.id;
   Reservation.findById(reservationId)
     .then((reservation) => {
@@ -153,7 +151,7 @@ exports.getReservation_Not_Auth = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-     
+
       res
         .status(200)
         .json({ message: "reservation fetched.", reservation: reservation });

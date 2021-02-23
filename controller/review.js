@@ -54,6 +54,10 @@ exports.postReview = (req, res, next) => {
         average = sum / place.ratings.length;
       }
       place.ratingsValue = average;
+      // average = average.toFixed(1);
+      // place.ratingsValue = average;
+      // var rounded = Math.round(average * 10) / 10;
+      // place.ratingsValue = rounded + 2;
 
       place.save();
       //Trial--------------------------------------------
@@ -181,7 +185,6 @@ exports.getPlaceRatings = (req, res, next) => {
       if (place.ratings.length !== 0) {
         average = sum / place.ratings.length;
       }
-      // console.log(place.ratings.length);
 
       res.status(200).json({ rating: average });
     })
